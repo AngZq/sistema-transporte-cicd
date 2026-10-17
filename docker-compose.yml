@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db_exportronic:
+    image: mysql:8.0
+    container_name: mysql_db_exportronic
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: exportronic_db
+      MYSQL_USER: admin_export
+      MYSQL_PASSWORD: admin_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  mysql_data:
