@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import date
 
 class LoginRequest(BaseModel):
     correo: EmailStr
@@ -22,6 +23,23 @@ class ClienteCreate(ClienteBase):
 
 class ClienteResponse(ClienteBase):
     id_cliente: int
+
+    class Config:
+        from_attributes = True
+##
+class ServicioBase(BaseModel):
+    id_cliente: int
+    origen: str
+    destino: str
+    descripcion_carga: str
+    estado: str = "Pendiente"
+    fecha_programada: date
+
+class ServicioCreate(ServicioBase):
+    pass
+
+class ServicioResponse(ServicioBase):
+    id_servicio: int
 
     class Config:
         from_attributes = True

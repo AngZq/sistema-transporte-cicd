@@ -57,3 +57,23 @@ def eliminar_cliente(id_cliente: int, db: Session = Depends(get_db)):
     db.delete(cliente)
     db.commit()
     return {"mensaje": f"Cliente {cliente.razon_social} eliminado correctamente"}
+
+##
+@app.post("/servicios", response_model=schemas.ServicioResponse)
+def registrar_servicio(servicio: schemas.ServicioCreate, db: Session = Depends(get_db)):
+    # 1. Verificar que el cliente al que se le asigna el viaje realmente exista
+    cliente = db.query(models.Cliente).filter(models.Cliente.id_cliente == servicio.id_cliente).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Error: El cliente especificado no existe")
+    
+    # 2. Guardar el nuevo servicio en la base de datos
+    nuevo_servicio = models.ServicioTransporte(**servicio.model_dump())
+    db.add(nuevo_servicio)
+    db.commit()
+    db.refresh(nuevo_servicio)
+    return nuevo_servicio
+
+@app.get("/servicios", response_model=list[schemas.ServicioResponse])
+def listar_servicios(db: Session = Depends(get_db)):
+    # Devolver todo el historial de viajes
+    return db.query(models.ServicioTransporte).all()
