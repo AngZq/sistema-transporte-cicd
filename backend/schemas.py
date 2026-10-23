@@ -43,3 +43,10 @@ class ServicioResponse(ServicioBase):
 
     class Config:
         from_attributes = True
+
+##
+class DashboardResponse(BaseModel):
+    total_servicios: int
+    pendientes: int
+    en_proceso: int
+    completados: int

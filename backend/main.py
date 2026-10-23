@@ -77,3 +77,19 @@ def registrar_servicio(servicio: schemas.ServicioCreate, db: Session = Depends(g
 def listar_servicios(db: Session = Depends(get_db)):
     # Devolver todo el historial de viajes
     return db.query(models.ServicioTransporte).all()
+
+##
+@app.get("/dashboard", response_model=schemas.DashboardResponse)
+def obtener_estadisticas(db: Session = Depends(get_db)):
+    # Realizamos consultas optimizadas para contar registros según su estado
+    total = db.query(models.ServicioTransporte).count()
+    pendientes = db.query(models.ServicioTransporte).filter(models.ServicioTransporte.estado == "Pendiente").count()
+    en_proceso = db.query(models.ServicioTransporte).filter(models.ServicioTransporte.estado == "En Proceso").count()
+    completados = db.query(models.ServicioTransporte).filter(models.ServicioTransporte.estado == "Completado").count()
+    
+    return {
+        "total_servicios": total,
+        "pendientes": pendientes,
+        "en_proceso": en_proceso,
+        "completados": completados
+    }
