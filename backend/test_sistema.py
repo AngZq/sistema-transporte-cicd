@@ -4,4 +4,4 @@ def test_estado_inicial_servicio():
     estado_asignado = "Pendiente"
     
     # Validamos que la lógica asigne correctamente el estado inicial
-    assert estado_asignado == "Pendiente"
+    assert estado_asignado == "Pendiente" # nosec
